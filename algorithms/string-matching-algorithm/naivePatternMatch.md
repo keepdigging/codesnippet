@@ -8,7 +8,7 @@
 
     /**
     * Naive String Searching Algothrim.
-    * find once.
+    * Match only once.
     **/
     public int naiveMatchOnce(char[] text, char[] pattern)
     {

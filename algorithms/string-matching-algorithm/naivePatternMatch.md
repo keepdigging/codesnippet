@@ -120,3 +120,16 @@
         return -1;
     }
 
+#### 细微差异
+
+
+
+
+#### why not choose kmp or bm?
+
+
+
+
+
+
+

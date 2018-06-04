@@ -122,7 +122,7 @@
 
 #### 细微差异
 
-
+    max这里有点不一样,如：abcabcabcd 里找abcd 最多在第6个字符跟abcd的第一个字符不一样,则匹配结束!
 
 
 #### why not choose kmp or bm?

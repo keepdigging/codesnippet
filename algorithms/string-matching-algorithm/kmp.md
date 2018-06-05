@@ -126,7 +126,225 @@
 ![](http://hi.csdn.net/attachment/201108/29/0_1314610552Nj5Q.gif)
 ![](http://hi.csdn.net/attachment/201108/29/0_1314610574Rjbs.gif)
 
+---
+
+#### Linux中kmp实现
+
+    https://github.com/torvalds/linux/blob/b3a3a9c441e2c8f6b6760de9331023a7906a4ac6/lib/ts_kmp.c
+
+#### 为了好看,简化版本
+
+    void kmp_init(const char *patn, int len, int *next)
+    {
+       int i, j;
+       next[0] = 0;
+       for (i = 1, j = 0; i < len; i++) 
+       {
+           while (j > 0 && patn[j] != patn[i])
+               j = next[j - 1];
+           if (patn[j] == patn[i])
+               j++;
+           next[i] = j;
+       }
+    }
+
+    int kmp_find(const char *text, int text_len, const char *patn, int patn_len, int *next)
+    {
+       int i, j;
+       for (i = 0, j = 0; i < text_len; i ++ ) 
+       {
+           while (j > 0 && text[i] != patn[j])
+               j = next[j-1];
+           if (text[i] == patn[j])
+               j++;
+           if (j == patn_len)
+               return i + 1 - patn_len;
+       }
+       return -1;
+    }
+
+#### 真实版本
+
+    static unsigned int kmp_find(struct ts_config *conf, struct ts_state *state)
+    {
+        struct ts_kmp *kmp = ts_config_priv(conf);
+        unsigned int i, q = 0, text_len, consumed = state->offset;
+        const u8 *text;
+        const int icase = conf->flags & TS_IGNORECASE;
     
+        for (;;) {
+            text_len = conf->get_next_block(consumed, &text, conf, state);
+    
+            if (unlikely(text_len == 0))
+                break;
+    
+            for (i = 0; i < text_len; i++) {
+                while (q > 0 && kmp->pattern[q] != (icase ? toupper(text[i]) : text[i]))
+                    q = kmp->prefix_tbl[q - 1];
+                if (kmp->pattern[q] == (icase ? toupper(text[i]) : text[i]))
+                    q++;
+                if (unlikely(q == kmp->pattern_len)) {
+                    state->offset = consumed + i + 1;
+                    return state->offset - kmp->pattern_len;
+                }
+            }
+            consumed += text_len;
+        }
+        return UINT_MAX;
+    }
+    
+    /**
+     * 计算next数组
+     **/
+    static inline void compute_prefix_tbl(const u8 *pattern, unsigned int len, unsigned int *prefix_tbl, int flags)
+    {
+        unsigned int k, q;
+        const u8 icase = flags & TS_IGNORECASE;
+    
+        for (k = 0, q = 1; q < len; q++) {
+            while (k > 0 && (icase ? toupper(pattern[k]) : pattern[k]) != (icase ? toupper(pattern[q]) : pattern[q]))
+                k = prefix_tbl[k-1];
+            if ((icase ? toupper(pattern[k]) : pattern[k]) == (icase ? toupper(pattern[q]) : pattern[q]))
+                k++;
+            prefix_tbl[q] = k;
+        }
+    }
+
+     *   Implements a linear-time string-matching algorithm due to Knuth,
+     *   Morris, and Pratt [1]. Their algorithm avoids the explicit
+     *   computation of the transition function DELTA altogether. Its
+     *   matching time is O(n), for n being length(text), using just an
+     *   auxiliary function PI[1..m], for m being length(pattern),
+     *   precomputed from the pattern in time O(m). The array PI allows
+     *   the transition function DELTA to be computed efficiently
+     *   "on the fly" as needed. Roughly speaking, for any state
+     *   "q" = 0,1,...,m and any character "a" in SIGMA, the value
+     *   PI["q"] contains the information that is independent of "a" and
+     *   is needed to compute DELTA("q", "a") [2]. Since the array PI
+     *   has only m entries, whereas DELTA has O(m|SIGMA|) entries, we
+     *   save a factor of |SIGMA| in the preprocessing time by computing
+     *   PI rather than DELTA.
+     *
+     *   [1] Cormen, Leiserson, Rivest, Stein
+     *       Introdcution to Algorithms, 2nd Edition, MIT Press
+     *   [2] See finite automation theory
+
+### [v_july_v版本](https://blog.csdn.net/v_july_v/article/details/7041827)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 实际项目中的常见算法
+
+    http://www.infoq.com/cn/news/2013/11/Core-algorithms-deployed
+
+
+### 完整算法
+
+    /**
+     * @param text
+     * @param pattern
+     * @return
+     */
+    public int kmp(char[] text, char[] pattern)
+    {
+        if(pattern.length > text.length)
+        {
+            return -1;
+        }
+        int[] nextArray = next(pattern);
+        int i = 0, j = 0;
+        while (i<text.length && j<pattern.length)
+        {
+            if(text[i] == pattern[j])
+            {
+                i++;
+                j++;
+            }
+            else if(j == 0)
+            {
+                i++;
+            }
+            else
+            {
+                j = nextArray[j-1];
+            }
+        }
+
+        if(j >= pattern.length)
+        {
+            return i-j;
+        }
+        return -1;
+    }
+
+    /**
+     * @param pattern
+     * @return
+     */
+    private static int[] next(char[] pattern)
+    {
+        int[] nextArr = new int[pattern.length];
+        nextArr[0] = 0;
+
+        int k = 0;
+
+        for (int j = 1; j < pattern.length; ++j)
+        {
+            while(k > 0 && pattern[j] != pattern[k])
+                k = nextArr[k-1];
+            if (pattern[j] == pattern[k])
+            {
+                k++;
+            }
+            nextArr[j] = k;
+        }
+        return nextArr;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     
 

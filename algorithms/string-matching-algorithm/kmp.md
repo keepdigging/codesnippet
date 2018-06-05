@@ -119,8 +119,8 @@
 
     [KMP算法的前缀next数组最通俗的解释](https://www.cnblogs.com/ganhang-acm/p/4060508.html)
 
-    ![](http://hi.csdn.net/attachment/201108/29/0_1314610552Nj5Q.gif)
-    ![](http://hi.csdn.net/attachment/201108/29/0_1314610574Rjbs.gif)
+![](http://hi.csdn.net/attachment/201108/29/0_1314610552Nj5Q.gif)
+![](http://hi.csdn.net/attachment/201108/29/0_1314610574Rjbs.gif)
 
     
 

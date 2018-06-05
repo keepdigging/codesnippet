@@ -24,7 +24,7 @@
     如果对称程度越高,next[j]值越大,即移动的位越小因为可能再次出现匹配的情况.
     如果没有对称,则移动最大,即直接跳过
     
-    [失配后移动多少位的数学证明](http://www.cnblogs.com/javaminer/p/3420213.html)
+   [失配后移动多少位的数学证明](http://www.cnblogs.com/javaminer/p/3420213.html)
 
 #### 数学归纳法
 

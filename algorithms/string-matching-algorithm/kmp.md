@@ -23,6 +23,8 @@
     失配后move多少呢? 失配位j之前已经匹配的字符长度-next[j]值; 
     如果对称程度越高,next[j]值越大,即移动的位越小因为可能再次出现匹配的情况.
     如果没有对称,则移动最大,即直接跳过
+    
+    [失配后移动多少位的数学证明](http://www.cnblogs.com/javaminer/p/3420213.html)
 
 #### 数学归纳法
 
@@ -117,7 +119,9 @@
     1.t 如果要存在对称性,那么对称程度肯定比前面这个c 的对称程度小,所以要找个更小的对称,这个不用解释了吧,如果大那么t就继承前面的对称性了
     2.要找更小的对称,必然在对称内部还存在子对称,而且这个t必须紧接着在子对称之后
 
-    [KMP算法的前缀next数组最通俗的解释](https://www.cnblogs.com/ganhang-acm/p/4060508.html)
+---
+
+[KMP算法的前缀next数组最通俗的解释](https://www.cnblogs.com/ganhang-acm/p/4060508.html)
 
 ![](http://hi.csdn.net/attachment/201108/29/0_1314610552Nj5Q.gif)
 ![](http://hi.csdn.net/attachment/201108/29/0_1314610574Rjbs.gif)

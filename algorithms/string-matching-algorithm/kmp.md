@@ -15,6 +15,18 @@
 
 #### 工程实践
 
+   [Linux 内核中使用到了字符串搜索](http://wangcong.org/2012/08/15/linux-e5-86-85-e6-a0-b8-e4-b8-ad-e7-9a-84-kmp-e5-ae-9e-e7-8e-b0/)，所以它也有 KMP 算法的实现，代码在 lib/ts_kmp.c 中。
+
+    Linux 内核中用到 KMP 算法的地方有三处：iptables string match 模块、iptables conntrack amanda 模块（不知道这个是用来干什么的）、以及 ematch qdisc。iptables string match 是通过字符串搜索来匹配一个包，然后进行相应的处理，比如用下面的命令可以阻止对domain.com服务器的HTTP请求：
+
+    iptables -I INPUT 1 -p tcp —dport 80 -m string —string “domain.com” —algo kmp -j DROP
+
+    至于 ematch qdisc，和它类似，可以通过字符串匹配到对应的包进行 QoS，比如这个例子：
+
+    tc filter add dev eth0 parent 10:12 prio 10 protocol ip basic match ‘text(kmp foobar from 0 to 200)’ flowid 10:1
+
+    总之，在内核中实现 KMP 算法是有必要的。下面来看具体实现。
+
 ---
 
 #### 算法本质

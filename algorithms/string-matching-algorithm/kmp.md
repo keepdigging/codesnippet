@@ -264,29 +264,26 @@
         {
             return -1;
         }
-        int[] nextArray = next(pattern);
-        int i = 0, j = 0;
-        while (i<text.length && j<pattern.length)
+
+        int j = 0;
+        int[] next = nextArray(pattern);
+
+        for (int i = 0; i<text.length; i++)
         {
+
+            while (j > 0 && text[i] != pattern[j])
+                j = next[j-1];
+
             if(text[i] == pattern[j])
             {
-                i++;
                 j++;
             }
-            else if(j == 0)
+            if(j == pattern.length)
             {
-                i++;
-            }
-            else
-            {
-                j = nextArray[j-1];
+                return i-j;
             }
         }
 
-        if(j >= pattern.length)
-        {
-            return i-j;
-        }
         return -1;
     }
 
@@ -294,31 +291,27 @@
      * @param pattern
      * @return
      */
-    private static int[] next(char[] pattern)
+    public int[] nextArray(char[] pattern)
     {
-        int[] nextArr = new int[pattern.length];
-        nextArr[0] = 0;
+        int[] next = new int[pattern.length];
+        next[0] = 0;
 
         int k = 0;
-
-        for (int j = 1; j < pattern.length; ++j)
+        for (int j = 1; j<pattern.length; j++)
         {
-            while(k > 0 && pattern[j] != pattern[k])
-                k = nextArr[k-1];
-            if (pattern[j] == pattern[k])
+            while (k > 0 && pattern[j] != pattern[k])
+            {
+                k = next[k-1];
+            }
+
+            if(pattern[j] == pattern[k])
             {
                 k++;
             }
-            nextArr[j] = k;
+            next[j] = k;
         }
-        return nextArr;
+        return next;
     }
-
-
-
-
-
-
 
 
 

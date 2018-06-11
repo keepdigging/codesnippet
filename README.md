@@ -1,4 +1,4 @@
-# 技术栈
+# technical points.
 
 #### DB
 
